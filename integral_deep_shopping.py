@@ -56,11 +56,10 @@ def GetItDone(city, magazines, locations, iteration, clients, cl, income, concur
     size = len(city)
     for i in range(size):
         for j in range(size):
-            city[i][j].InitPrice(5, init_price)
+            city[i][j].InitPrice(len(magazines), init_price)
 
     for magazine in magazines:
         magazine.price = city[magazine.y][magazine.x].income
-        print(city[magazine.y][magazine.x].income)
         print(magazine.price)
 
     for magazine in magazines:
@@ -71,8 +70,6 @@ def GetItDone(city, magazines, locations, iteration, clients, cl, income, concur
             city[i][j].choose(locations)
             city[i][j].GoToShopping(magazines[city[i][j].magazine].price)
             if city[i][j].magazine:
-                if city[i][j].magazine == 0:
-                    print("я супер долбоеб")
                 cl[f"{city[i][j].magazine}"] += 1
 
     for magazine in magazines:
@@ -111,9 +108,10 @@ def GetItDone(city, magazines, locations, iteration, clients, cl, income, concur
             income[f"{magazine.name}"] += [magazine.income]
             clients[f"{magazine.name}"] += [magazine.clients]
             education(
-                magazine, price, income[f"{magazine.name}"], city, concurents[f"{magazine.name}"])
+               magazine, price, income[f"{magazine.name}"], city, concurents[f"{magazine.name}"])
 
         for magazine in magazines:
+            #print(len(income[f"{magazine.name}"][-magazine.learn_size:]))
             concurents[f"{magazine.name}"] += [magazine.Predict(
                 income[f"{magazine.name}"][-magazine.learn_size:], concurents[f"{magazine.name}"][-1])]
             concurents[f"{magazine.name}"] = concurents[f"{magazine.name}"][-2:]
@@ -178,7 +176,7 @@ for magazine in magazines:
     step[f"{magazine.name}"] = 0
 for i in range(size):
     for j in range(size):
-        city[i][j].InitPrice(5, 150)
+        city[i][j].InitPrice(len(magazines), 150)
         city[i][j].choose(locations)
         step[f"{city[i][j].magazine}"] += 1
 
@@ -199,5 +197,5 @@ for magazine in magazines:
     concurents[f"{magazine.name}"] = [magazine.strategy for _ in range(2)]
     magazine.build_model()
 
-GetItDone(city, magazines, locations, 5000, clients_, clients, income, concurents,
+GetItDone(city, magazines, locations, 25000, clients_, clients, income, concurents,
           price, clients_, train=False, plotting=True, init_price=150, integral=True)
