@@ -3,3 +3,6 @@ class History():
         self.prices = {}
         self.clients = {}
         self.income = {}
+        self.capital = {}
+        self.status = {}
+        self.contentment = []
