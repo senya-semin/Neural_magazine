@@ -43,6 +43,18 @@ def happines(location, adress, tolerance):
                 (location[y-1][x+1])
             ):
                 income += [i]
+        elif y == len(location) - 1 and x == 0:
+            for i in (
+                (location[y][x+1]), (location[y-1][x]),
+                (location[y-1][x+1]),
+            ):
+                income += [i]
+        elif y == 0 and x == len(location) - 1:
+            for i in (
+                (location[y+1][x]), (location[y][x-1]),
+                (location[y+1][x-1]),
+            ):
+                income += [i]
     elif any(point == len(location) - 1 for point in adress):
         if all(point == len(location) - 1 for point in adress):
             for i in (
@@ -87,42 +99,3 @@ def shiller(location, intolerance):
             location[new_house[0]][new_house[1]] = agent_income
             location[agent[0]][agent[1]] = renovation_agent
     return location
-
-
-#def linear(a, x, b):
-#     return a*x + b
-
-
-def cubic(x):
-    return x**3
-
-
-# def update(frame):
-#     global city
-#     global intolerance
-#     city = shiller(city, tolerance)
-#     matrice.set_array(city)
-
-
-# # Нужно чтоюы соседи получали не менее этой части моего дохода
-# tolerance = 0.6
-
-# # #distribution = [linear(1, x, 0) for x in np.arange(0.1,1,0.01)]
-# distribution = [cubic(x) for x in np.arange(0.1, 1, 0.01)]
-
-# city = np.random.choice(distribution, (100, 100))
-
-# fig, ax = plt.subplots(figsize=(10, 5), dpi=80)
-# matrice = ax.matshow(city)
-# plt.colorbar(matrice)
-
-# plt.imshow(city, interpolation="none")
-# plt.show()
-
-# for i in range(int(1e6)):
-#     city = shiller(city, tolerance)
-# plt.imshow(city, interpolation="none")
-# plt.show()
-
-# ani = animation.FuncAnimation(fig, update, frames=15000, interval=1)
-# plt.show()

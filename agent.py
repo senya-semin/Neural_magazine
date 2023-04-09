@@ -19,31 +19,28 @@ class Agent():
         self.knowledge = self.price
 
     def choose(self, coordinates):
-        self.x_ = coordinates[:,1]
-        self.y_ = coordinates[:,0]
-        self.lenght = [np.sqrt((self.x_[i] - self.x)**2 + (self.y_[i] - self.y)**2) for i in range(len(self.x_))]
+        magazine_x = coordinates[:,1]
+        magazine_y = coordinates[:,0]
+        self.lenght = [np.sqrt((magazine_x[i] - self.x)**2 + (magazine_y - self.y)**2) for i in range(len(magazine_x))]
         for i in range(len(self.lenght)):
             if self.lenght[i] == 0:
                 self.lenght[i] = 1
-        self.magazine = np.argmin([self.price[f"{i}"][0] * self.lenght[i] for i in range(len(self.price))])
+        self.magazine = np.argmin([self.price[f"{i}"] * self.lenght[i] for i in range(len(self.price))])
 
-    def choose_integral(self, coordinates):
-        self.x_ = coordinates[:,1]
-        self.y_ = coordinates[:,0]
-        self.choose = []
-        self.choose_ = []
-        self.lenght = [np.sqrt((self.x_[i] - self.x)**2 + (self.y_[i] - self.y)**2) for i in range(len(self.x_))]
+    def choose_integral(self, magazines):
+        choose = []
+        choose_ = []
+        self.lenght = [np.sqrt((spot.x - self.x)**2 + (spot.y - self.y)**2) for spot in magazines]
         for i in range(len(self.lenght)):
             if self.lenght[i] == 0:
                 self.lenght[i] = 1
         self.magazine = [self.e ** (self.price[f"{i}"][0] / self.income) * self.lenght[i] for i in range(len(self.price))]
         for i in range(len(self.lenght)):
             if self.price[f"{i}"][0] <= self.income:
-                self.choose += [self.magazine[i]]
-                self.choose_ += [i]
-        if len(self.choose) >= 1:
-            self.magazine = np.argmin(self.choose)
-            self.magazine = self.choose_[self.magazine]
+                choose += [self.magazine[i]]
+                choose_ += [i]
+        if len(choose) >= 1:
+            self.magazine = choose_[np.argmin(choose)]
         else:
             self.magazine = np.random.randint(0, len(self.price))
 
@@ -58,11 +55,12 @@ class Agent():
                 self.knowledge[f"{i}"] = dict[f"{i}"]
     
     def UpdateInformation(self):
-        self.price = self.knowledge
+        self.price = self.knowledge.copy()
 
     def UpdateTime(self):
         Agent.t += 0.01
 
     def DropTime(self):
         Agent.t = 0
+
 
