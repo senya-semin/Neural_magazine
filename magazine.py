@@ -1,7 +1,8 @@
 from Brain import *
+import time
 
 class Magazine():
-    def __init__(self, y:int, x:int, init_price:float, rent: float, inflation = 0.2, name = None, neural = False, memory = 500, allow_close = False, day_until_close = 10) -> None:
+    def __init__(self, y:int, x:int, init_price:float, rent: float, inflation = 0.2, name = None, neural = False, memory = 500, allow_close = False, day_until_close = 70) -> None:
         self.x = x
         self.y = y
         self.price = init_price
@@ -33,13 +34,13 @@ class Magazine():
             return 
         self.brain.update_epsilon()
         self.strategy = self.brain.predict(history)[0]
-        print(self.strategy)
         if np.random.rand() <= self.brain.epsilon:
             self.update_price_random()
             return
         self.price += [-10, 0, 10][np.argmax(self.strategy)]
 
     def learn(self, history):
+        time.sleep(0.5)
         self.brain.learn(history, self.income, self.strategy)
 
     def colletct_income(self):
@@ -52,6 +53,7 @@ class Magazine():
                 self.clients = 0
                 self.income = 0
                 self.capital = 0
+                self.price = 0
             self.day_close += 1
             if self.capital > 0:
                 self.day_close = 0

@@ -148,9 +148,10 @@ class City:
             x = np.random.randint(0, 16)
             y = np.random.randint(0, 16)
             for magazine in self.magazines:
-                if x == magazine.x and y == magazine.y:
-                    return self.generate_location(day)
-            new_name = str(int(list(self.history.income.keys())[-1]) + 1)
+                if magazine.status:
+                    if x == magazine.x and y == magazine.y:
+                        return self.generate_location(day)
+            new_name = int(list(self.history.income.keys())[-1]) + 1
             self.magazines += [
                 Magazine(
                     y=y,
@@ -169,7 +170,7 @@ class City:
             self.history.capital[f"{new_name}"] = np.zeros(day).tolist()
 
     def new_magazine(self, day, knowledge):
-        if np.random.rand() ** 2 < (1 - self.history.contentment[-1]):
+        if np.random.rand() < (1 - self.history.contentment[-1]) ** 2:
             print("Я родился!")
             self.generate_location(day + 2)
             knowledge[f"{self.magazines[-1].name}"] = [self.magazines[-1].price, self.cityzen[0][0].t]
