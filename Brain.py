@@ -20,7 +20,7 @@ class Brain():
 
     def build_model(self):
         self.model = keras.Sequential()
-        self.model.add(layers.LSTM(64, input_shape=(self.memory, 1), return_sequences=True))
+        self.model.add(layers.LSTM(64, input_shape=(2, self.memory), return_sequences=True))
         self.model.add(layers.Dropout(0.5))
         self.model.add(layers.LSTM(32, return_sequences=False))
         self.model.add(layers.Dropout(0.5))

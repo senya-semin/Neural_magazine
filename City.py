@@ -51,8 +51,8 @@ class City:
     def initialize_magazine(self, magazine_namber):
         self.magazines = []
         for i in range(magazine_namber):
-            x = np.random.randint(0, 16)
-            y = np.random.randint(0, 16)
+            x = np.random.randint(0, self.size)
+            y = np.random.randint(0, self.size)
             self.magazines += [
                 Magazine(
                     y=y,
@@ -92,7 +92,7 @@ class City:
                     ] = magazine.price
                     if self.neural:
                         magazine.update_price_neural(
-                            self.history.income[f"{magazine.name}"][-self.memory :]
+                            [self.history.income[f"{magazine.name}"][-self.memory :], self.history.prices[f"{magazine.name}"][-self.memory :]]
                         )
                     else:
                         magazine.update_price_random()
@@ -134,7 +134,7 @@ class City:
                 self.history.status[f"{magazine.name}"] = magazine.status
                 contentment += magazine.clients
                 magazine.new_day(
-                    self.history.income[f"{magazine.name}"][-self.memory :]
+                    [self.history.income[f"{magazine.name}"][-self.memory :], self.history.prices[f"{magazine.name}"][-self.memory :]]
                 )
             self.history.contentment += [contentment/(self.size**2)]
 
@@ -145,8 +145,8 @@ class City:
             print(day)
 
     def generate_location(self, day):
-            x = np.random.randint(0, 16)
-            y = np.random.randint(0, 16)
+            x = np.random.randint(0, self.size)
+            y = np.random.randint(0, self.size)
             for magazine in self.magazines:
                 if magazine.status:
                     if x == magazine.x and y == magazine.y:
