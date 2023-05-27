@@ -92,7 +92,7 @@ class City:
                     ] = magazine.price
                     if self.neural:
                         magazine.update_price_neural(
-                            [self.history.income[f"{magazine.name}"][-self.memory :], self.history.prices[f"{magazine.name}"][-self.memory :]]
+                            magazine.collect_history(self.history)
                         )
                     else:
                         magazine.update_price_random()
@@ -134,7 +134,7 @@ class City:
                 self.history.status[f"{magazine.name}"] = magazine.status
                 contentment += magazine.clients
                 magazine.new_day(
-                    [self.history.income[f"{magazine.name}"][-self.memory :], self.history.prices[f"{magazine.name}"][-self.memory :]]
+                    magazine.collect_history(self.history)
                 )
             self.history.contentment += [contentment/(self.size**2)]
 

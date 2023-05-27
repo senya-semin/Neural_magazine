@@ -58,6 +58,14 @@ class Magazine():
             if self.capital > 0:
                 self.day_close = 0
 
+    def collect_history(self, history):
+        if self.brain.politic == 'income':
+            return [history.income[f"{self.name}"][-self.memory :], history.prices[f"{self.name}"][-self.memory :]]
+        elif self.brain.politic == 'capital':
+            return [history.capital[f"{self.name}"][-self.memory :], history.prices[f"{self.name}"][-self.memory :]]
+        elif self.brain.politic == 'profitability':
+            return [history.income[f"{self.name}"][-self.memory :], history.clients[f"{self.name}"][-self.memory :], history.prices[f"{self.name}"][-self.memory :]]
+
     def new_day(self, history):
         if self.status:
             if self.neural and (self.open_days > self.memory):

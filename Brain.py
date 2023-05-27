@@ -2,6 +2,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+from numpy import random
 
 class Brain():
     """
@@ -15,15 +16,19 @@ class Brain():
         self.epsilon_min = epsilon_min
         self.epsilon_decay = epsilon_decay
         self.lr = learning_rate
+        self.politic = random.choice(['income', 'capital', 'profitability'])
 
         self.build_model()
 
     def build_model(self):
         self.model = keras.Sequential()
-        self.model.add(layers.LSTM(64, input_shape=(2, self.memory), return_sequences=True))
+        if self.politic == 'profitability':
+            self.model.add(layers.LSTM(32, input_shape=(3, self.memory), return_sequences=False))
+        else:
+            self.model.add(layers.LSTM(32, input_shape=(2, self.memory), return_sequences=False))
         self.model.add(layers.Dropout(0.5))
-        self.model.add(layers.LSTM(32, return_sequences=False))
-        self.model.add(layers.Dropout(0.5))
+        self.model.add(layers.Dense(10))
+        self.model.add(layers.Dropout(0.2))
         self.model.add(layers.Dense(3, activation='softmax'))
 
         self.model.compile(loss='categorical_crossentropy', optimizer=tf.keras.optimizers.Adam(lr=self.lr), metrics=['accuracy'])
@@ -33,7 +38,10 @@ class Brain():
         return self.model.predict(timeline)
     
     def learn(self, history: list, actual_income: float, prediction: list):
-        mean_income = np.mean(history)
+        if self.politic == 'profitability':
+            mean_income = np.mean(np.array(history[0])/np.array(history[1]))
+        else:
+            mean_income = np.mean(history)
         # На сколько текущий доход отличается от среднего
         if actual_income < 0 and mean_income < 0:
             income_change = mean_income/actual_income - 1
